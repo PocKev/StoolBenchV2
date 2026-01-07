@@ -1,0 +1,80 @@
+############################
+# General
+############################
+.DS_Store
+Thumbs.db
+*.log
+
+############################
+# VS Code
+############################
+.vscode/
+!.vscode/extensions.json
+
+############################
+# Python
+############################
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.pyre/
+ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+############################
+# Python build artifacts
+############################
+build/
+dist/
+wheelhouse/
+
+############################
+# Node / React / Vite
+############################
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+############################
+# Frontend build output
+############################
+frontend/dist/
+frontend/.vite/
+
+############################
+# Docker
+############################
+*.tar
+docker-compose.override.yml
+
+############################
+# Environment files
+############################
+.env
+.env.*
+!.env.example
+
+############################
+# Coverage / reports
+############################
+coverage/
+htmlcov/
+
+############################
+# Misc IDEs
+############################
+.idea/
+*.swp
+*.swo
