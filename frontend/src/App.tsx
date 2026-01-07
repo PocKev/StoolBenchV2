@@ -8,10 +8,12 @@ type HealthStatus = "idle" | "ok" | "error";
 export default function App() {
   const [status, setStatus] = useState<HealthStatus>("idle");
   const [message, setMessage] = useState("");
+  const [showBanner, setShowBanner] = useState(false);
 
   const checkHealth = async () => {
     setStatus("idle");
     setMessage("Checking backend health...");
+    setShowBanner(true);
 
     try {
       const res = await fetch(`${API_URL}/api/health`);
@@ -24,20 +26,30 @@ export default function App() {
       setStatus("error");
       setMessage("Backend unreachable");
     }
+
+    // Auto-hide banner after 3s
+    setTimeout(() => setShowBanner(false), 3000);
   };
 
   return (
-    <div className="app">
-      <h1>StoolBenchV2</h1>
-      <p>A @pockev app</p>
+    <div className="page">
+      {/* Top bar */}
+      <div className="top-right">
+        <button onClick={checkHealth}>Ping</button>
+      </div>
 
-      <button onClick={checkHealth}>Check Backend Health</button>
-
-      {message && (
+      {/* Banner */}
+      {showBanner && (
         <div className={`banner ${status}`}>
           {message}
         </div>
       )}
+
+      {/* Centered content */}
+      <main className="center">
+        <h1>StoolBenchV2</h1>
+        <p className="subtitle">A @pockev app</p>
+      </main>
     </div>
   );
 }
