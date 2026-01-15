@@ -10,26 +10,26 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
-  backend:
-    build: ./backend
+  bench-processor:
+    build: ./bench_processor
     ports:
       - "8000:8000"
     environment:
       - CORS_ORIGINS=http://localhost:5173
       - DATABASE_URL=postgresql+psycopg://appuser:apppass@db:5432/appdb
     volumes:
-      - ./backend:/app
+      - ./bench_processor:/app
     depends_on:
       - db
 
-  frontend:
-    build: ./frontend
+  bench-react-app:
+    build: ./react_app
     ports:
       - "5173:5173"
     depends_on:
-      - backend
+      - bench-processor
     volumes:
-      - ./frontend:/app
+      - ./react_app:/app
       - /app/node_modules
 
 volumes:
