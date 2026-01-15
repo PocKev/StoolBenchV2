@@ -34,9 +34,9 @@ Connect to appdb
 
 Create a migration:
 ```
-docker compose exec backend python -m alembic -c alembic.ini revision --autogenerate -m "migration name"
+docker compose exec bench-processor python -m alembic -c alembic.ini revision --autogenerate -m "migration name"
 ```
 Check alembic/versions newly created migration, then apply migration:
 ```
-docker compose exec backend python -m alembic -c alembic.ini upgrade head
+docker compose exec bench-processor python -m alembic -c alembic.ini upgrade head
 ```

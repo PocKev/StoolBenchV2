@@ -1,0 +1,17 @@
+from sqlalchemy import Integer, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from app.db import Base
+from .stool_record import StoolRecord
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    user_id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String(120), nullable=False)
+    email: Mapped[str] = mapped_column(String(255), nullable=False, unique=True, index=True)
+
+    stool_records: Mapped[list["StoolRecord"]] = relationship(
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
