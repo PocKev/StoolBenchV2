@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./App.css";
+import BenchPanel from "./BenchPanel";
 
 const API_URL = "http://localhost:8000";
 
@@ -9,8 +10,10 @@ export default function App() {
   const [status, setStatus] = useState<HealthStatus>("idle");
   const [message, setMessage] = useState("");
   const [showBanner, setShowBanner] = useState(false);
+  const [entered, setEntered] = useState(false);
 
-  const checkHealth = async () => {
+  const checkHealth = async (e?: React.MouseEvent) => {
+    e?.stopPropagation();
     setStatus("idle");
     setMessage("Checking backend health...");
     setShowBanner(true);
@@ -27,13 +30,12 @@ export default function App() {
       setMessage("Backend unreachable");
     }
 
-    // Auto-hide banner after 3s
     setTimeout(() => setShowBanner(false), 3000);
   };
 
   return (
-    <div className="page">
-      {/* Top bar */}
+    <div className="viewport">
+      {/* Top-right Ping (always visible) */}
       <div className="top-right">
         <button onClick={checkHealth}>Ping</button>
       </div>
@@ -45,11 +47,21 @@ export default function App() {
         </div>
       )}
 
-      {/* Centered content */}
-      <main className="center">
-        <h1>StoolBenchV2</h1>
-        <p className="subtitle">A @pockev app</p>
-      </main>
+      {/* Welcome screen */}
+      <section
+        className={`welcome ${entered ? "lift" : ""}`}
+        onClick={() => setEntered(true)}
+      >
+        <main className="center">
+          <h1>StoolBenchV2</h1>
+          <p className="subtitle">A @pockev app</p>
+        </main>
+      </section>
+
+      {/* Bench panel underneath */}
+      <section className="bench">
+        <BenchPanel />
+      </section>
     </div>
   );
 }

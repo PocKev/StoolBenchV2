@@ -1,5 +1,5 @@
 /* Page layout */
-.page {
+.viewport {
   min-height: 100vh;
   background: #fafafa;
   position: relative;
@@ -67,6 +67,49 @@ button:hover {
 .banner.idle {
   background: #f3f4f6;
   color: #374151;
+}
+
+/* Welcome page */
+.welcome {
+  position: absolute;
+  inset: 0;
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.6s ease-in-out;
+  z-index: 2;
+}
+
+.welcome.lift {
+  transform: translateY(-100%);
+}
+
+.bench {
+  background: #6b4f3f; /* warm brown */
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+}
+
+/* Panel — mobile-centered card */
+.panel {
+  background: #e2cfb2;
+  width: 100%;
+  max-width: 420px;          /* mobile-first width */
+  min-height: 60vh;          /* feels like an app screen */
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 /* Animation */
