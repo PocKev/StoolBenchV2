@@ -1,7 +1,10 @@
 from sqlalchemy import Integer, Float, DateTime, ForeignKey, CheckConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db import Base
-from .user import User
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .user import User
 
 
 class StoolRecord(Base):
