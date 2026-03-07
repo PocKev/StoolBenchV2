@@ -10,7 +10,7 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 from app.db import Base  # noqa
-from app import models   # noqa: ensure models are imported so tables register
+from app.db import models  # noqa: ensure models are imported so tables register
 
 target_metadata = Base.metadata
 
