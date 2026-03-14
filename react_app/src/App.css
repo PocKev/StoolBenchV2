@@ -118,6 +118,22 @@ button:hover {
   justify-content: center;
   align-items: center;
   text-align: center;
+  position: relative;
+}
+
+.success-bubble {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 2px solid #2f6f2b;
+  background: #d8f5c8;
+  color: #1f4f1d;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: lowercase;
+  animation: bubbleFadeOut 1.8s ease forwards;
 }
 
 .stool-form {
@@ -290,6 +306,11 @@ button:hover {
     0 2px 0 #2a1a11;
 }
 
+.log-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
 .log-button span {
   position: relative;
   z-index: 1;
@@ -304,5 +325,24 @@ button:hover {
   to {
     transform: translate(-50%, 0);
     opacity: 1;
+  }
+}
+
+@keyframes bubbleFadeOut {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  15% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  75% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
   }
 }
