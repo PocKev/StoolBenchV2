@@ -1,5 +1,7 @@
-import { CSSProperties, FormEvent, useState } from "react";
+import { CSSProperties, FormEvent, useEffect, useRef, useState } from "react";
 
+const API_URL = "http://localhost:8000";
+const DEFAULT_USER_ID = 1;
 const RATING_VALUES = [0, 0.33, 0.67, 1] as const;
 
 const WETNESS_LABELS = [
@@ -20,30 +22,79 @@ export default function BenchPanel() {
   const [wetnessIndex, setWetnessIndex] = useState<number | null>(null);
   const [experienceIndex, setExperienceIndex] = useState<number | null>(null);
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [showSuccessBubble, setShowSuccessBubble] = useState(false);
+  const successTimerRef = useRef<number | null>(null);
   const wetnessFill = wetnessIndex === null ? 0 : (wetnessIndex / 3) * 100;
   const experienceFill = experienceIndex === null ? 0 : (experienceIndex / 3) * 100;
 
-  const handleSubmit = (e: FormEvent) => {
+  useEffect(() => {
+    return () => {
+      if (successTimerRef.current) {
+        window.clearTimeout(successTimerRef.current);
+      }
+    };
+  }, []);
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setAttemptedSubmit(true);
+    setSubmitError(null);
 
     if (wetnessIndex === null || experienceIndex === null) {
       return;
     }
 
     const stoolRecordPayload = {
-      wetness_rating: RATING_VALUES[wetnessIndex],
-      experience_rating: RATING_VALUES[experienceIndex],
+      wetness: RATING_VALUES[wetnessIndex],
+      experience: RATING_VALUES[experienceIndex],
     };
 
-    console.log("stool_records form payload", stoolRecordPayload);
-    setWetnessIndex(null);
-    setExperienceIndex(null);
-    setAttemptedSubmit(false);
+    setIsSubmitting(true);
+    try {
+      const response = await fetch(`${API_URL}/api/${DEFAULT_USER_ID}/stool`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(stoolRecordPayload),
+      });
+
+      if (!response.ok) {
+        let errorMessage = "Failed to log stool record.";
+        try {
+          const data = await response.json();
+          if (typeof data?.message === "string") {
+            errorMessage = data.message;
+          }
+        } catch {
+          // Keep default message if response is not JSON
+        }
+        throw new Error(errorMessage);
+      }
+
+      setWetnessIndex(null);
+      setExperienceIndex(null);
+      setAttemptedSubmit(false);
+      setShowSuccessBubble(true);
+      if (successTimerRef.current) {
+        window.clearTimeout(successTimerRef.current);
+      }
+      successTimerRef.current = window.setTimeout(() => {
+        setShowSuccessBubble(false);
+      }, 1800);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to log stool record.";
+      setSubmitError(message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className="panel">
+      {showSuccessBubble && <div className="success-bubble">success</div>}
       <h2>Log Stool Record</h2>
 
       <form className="stool-form" onSubmit={handleSubmit}>
@@ -103,9 +154,10 @@ export default function BenchPanel() {
           )}
         </label>
 
-        <button type="submit" className="log-button">
-          <span>Log log</span>
+        <button type="submit" className="log-button" disabled={isSubmitting}>
+          <span>{isSubmitting ? "Logging..." : "Log log"}</span>
         </button>
+        {submitError && <span className="field-error">{submitError}</span>}
       </form>
     </div>
   );
