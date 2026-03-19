@@ -1,4 +1,5 @@
 import sys
+from collections.abc import Generator
 from pathlib import Path
 
 import pytest
@@ -16,7 +17,7 @@ from app.main import app
 
 
 @pytest.fixture(scope="module")
-def test_db_session() -> Session:
+def test_db_session() -> Generator[Session, None, None]:
     engine = create_engine(
         "sqlite+pysqlite:///:memory:",
         connect_args={"check_same_thread": False},
@@ -35,8 +36,8 @@ def test_db_session() -> Session:
 
 
 @pytest.fixture(scope="module")
-def client(test_db_session: Session):
-    def override_get_db():
+def client(test_db_session: Session) -> Generator[TestClient, None, None]:
+    def override_get_db() -> Generator[Session, None, None]:
         yield test_db_session
 
     app.dependency_overrides[get_db] = override_get_db
